@@ -4,27 +4,29 @@ import Home from "../home/Home";
 import LoginForm from "../login/LoginForm";
 import { AuthProvider } from "../../contexts/AuthContext";
 import UploadForm from "../uploadForm/UploadForm";
+import { UploadDataProvider } from "../../contexts/UploadDataContext";
+import ResultsWithContext from "../resultsDisplay/ResultsWithContext";
+import NotFoundPage from "../notFoundPage/NotFoundPage";
 
 function App() {
   return (
-    <Router>
-      <div className={s.wrapper}>
-        <main className={s.main}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={
-                <AuthProvider>
-                  <LoginForm />
-                </AuthProvider>
-              }
-            />
-            <Route path="/upload" element={<UploadForm />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <AuthProvider>
+      <UploadDataProvider>
+        <Router>
+          <div className={s.wrapper}>
+            <main className={s.main}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/upload" element={<UploadForm />} />
+                <Route path="/result" element={<ResultsWithContext />} />{" "}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </UploadDataProvider>
+    </AuthProvider>
   );
 }
 

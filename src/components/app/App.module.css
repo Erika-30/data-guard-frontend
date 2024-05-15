@@ -1,8 +1,8 @@
 .wrapper {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  background: #f0f0f0; /* Solo para mejorar la visibilidad durante el desarrollo */
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
 }
 
 .header {
@@ -20,7 +20,6 @@
   display: flex;
   align-items: center;
   gap: 4px;
-
   background: none;
   border: none;
   cursor: pointer;
@@ -42,13 +41,10 @@
   padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
   justify-content: center;
   align-items: center;
-
   background: none;
   border: none;
   cursor: pointer;
   text-decoration: none;
-
-  /* text-sm/leading-5/medium */
   color: var(--foreground, #171717);
   font-size: var(--font-sm);
   font-weight: 500;
@@ -66,7 +62,7 @@
 
 .main {
   width: 100%;
-  max-width: 800; /* O el ancho máximo que prefieras para tu formulario */
+  max-width: 800;
   background: #ffffff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

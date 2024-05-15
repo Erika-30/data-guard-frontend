@@ -1,20 +1,11 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import s from "./LoginForm.module.css";
 import Button from "../common/button/Button";
-import { AuthContext } from "../../contexts/AuthContext";
+import useAuth from "../../hooks/useAuth";
 
 function LoginForm() {
-  let navigate = useNavigate();
-  const { login, error } = useContext(AuthContext);
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async () => {
-    await login(username, password);
-    navigate("/");
-  };
+  const { username, setUsername, password, setPassword, handleLogin, error } =
+    useAuth();
 
   return (
     <div>

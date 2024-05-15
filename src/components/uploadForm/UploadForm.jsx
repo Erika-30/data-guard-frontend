@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import s from "./UploadForm.module.css";
 import Button from "../common/button/Button";
+import { useUploadData } from "../../contexts/UploadDataContext";
 
 function UploadForm() {
+  const { handleUpload } = useUploadData();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -45,13 +47,7 @@ function UploadForm() {
 
   return (
     <div className={s.wrapper}>
-      <h1>ndnkcvnfndvjefn</h1>
-      <h1>ndnkcvnfndvjefn</h1>
-
-      <h1>ndnkcvnfndvjefn</h1>
-
-      <h1>ndnkcvnfndvjefn</h1>
-
+      <h2>Selecciona un archivo de carga!</h2>
       <form onSubmit={handleSubmit} className={s.form}>
         <input
           type="file"
