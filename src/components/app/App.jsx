@@ -1,34 +1,30 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import s from "./App.module.css";
-import reactLogo from "../../assets/react.svg";
+import Home from "../home/Home";
+import LoginForm from "../login/LoginForm";
+import { AuthProvider } from "../../contexts/AuthContext";
+import UploadForm from "../uploadForm/UploadForm";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div className={s.root}>
-        <a href="https://react.dev" target="_blank">
-          <img
-            src={reactLogo}
-            className={`${s.logo} ${s.react}`}
-            alt="React logo"
-          />
-        </a>
+    <Router>
+      <div className={s.wrapper}>
+        <main className={s.main}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/login"
+              element={
+                <AuthProvider>
+                  <LoginForm />
+                </AuthProvider>
+              }
+            />
+            <Route path="/upload" element={<UploadForm />} />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className={s.card}>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className={s["read-the-docs"]}>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   );
 }
 
