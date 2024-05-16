@@ -1,7 +1,17 @@
+// import * as React from "react";
+// import ReactDOM from "react-dom/client";
+// import "./index.css";
+// import AppRouter from "./components/Router";
+
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <React.StrictMode>
+//     <AppRouter />
+//   </React.StrictMode>
+// );
+
 import * as React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./components/app/App.jsx";
-import "./index.css";
+import App from "./components/app/App";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
