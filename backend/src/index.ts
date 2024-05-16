@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { pool } from "./db";
+import { pool } from "./db/config/dbConfig";
 
 const port = 3000;
 

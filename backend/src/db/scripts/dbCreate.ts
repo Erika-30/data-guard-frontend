@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { adminClient } from "..";
+import { adminClient } from "../config/dbConfig";
 
 if (process.env["NODE_ENV"] === "test") {
   configDotenv({ path: ".env.test" });

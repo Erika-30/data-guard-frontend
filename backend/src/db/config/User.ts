@@ -5,7 +5,9 @@ export const UserSchema = z.object({
   name: z
     .string()
     .min(1, "El nombre es requerido")
-    .max(30, "El nombre no puede exceder los 30 caracteres"),
+    .max(30, "El nombre no puede exceder los 30 caracteres")
+    .regex(/^[a-zA-Z ]*$/, "El nombre solo puede contener letras y espacios"),
+
   email: z
     .string()
     .email("Debe ser un email válido")
@@ -18,4 +20,6 @@ export const UserSchema = z.object({
 
 export type User = z.infer<typeof UserSchema>;
 
-export type UserData = Omit<User, "id" | "createdAt" | "updatedAt">;
+export type UserData = Omit<User, "id" | "createdAt" | "updatedAt"> & {
+  password?: string;
+};

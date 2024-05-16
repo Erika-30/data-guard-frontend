@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { query, pool } from "..";
+import { query, pool } from "../config/dbConfig";
 
 if (process.env["NODE_ENV"] === "test") {
   configDotenv({ path: ".env.test" });

@@ -1,4 +1,4 @@
-import { query } from "./index";
+import { query } from "./config/dbConfig";
 
 export const truncateTable = async (tableName: string): Promise<void> => {
   try {

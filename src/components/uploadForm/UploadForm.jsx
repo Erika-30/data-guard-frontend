@@ -1,49 +1,10 @@
-import { useState } from "react";
 import s from "./UploadForm.module.css";
 import Button from "../common/button/Button";
-import { useUploadData } from "../../contexts/UploadDataContext";
+import useUpload from "../../hooks/useUpload";
 
 function UploadForm() {
-  const { handleUpload } = useUploadData();
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    setError("");
-    setSuccessMsg("");
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!file) {
-      setError("Please select a file to upload.");
-      return;
-    }
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setSuccessMsg("File uploaded successfully.");
-        setFile(null);
-      } else {
-        throw new Error(data.message || "Failed to upload file");
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setUploading(false);
-    }
-  };
+  const { file, uploading, error, successMsg, handleFileChange, handleSubmit } =
+    useUpload();
 
   return (
     <div className={s.wrapper}>

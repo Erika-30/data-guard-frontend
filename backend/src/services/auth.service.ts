@@ -1,6 +1,6 @@
 import { getUserByUsernameFromDB, createUserInDB } from "../data/users.data";
 import bcrypt from "bcrypt";
-import { User, UserData } from "../models/User";
+import { User, UserData } from "../db/config/User";
 
 export async function createUser(userData: UserData): Promise<User> {
   return await createUserInDB(userData);

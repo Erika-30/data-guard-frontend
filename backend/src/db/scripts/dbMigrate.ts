@@ -1,7 +1,7 @@
 import { configDotenv } from "dotenv";
 import path from "node:path";
 import fs from "node:fs";
-import { query, pool } from "..";
+import { query, pool } from "../config/dbConfig";
 import { JSONStorage, Umzug } from "umzug";
 
 if (process.env["NODE_ENV"] === "test") {

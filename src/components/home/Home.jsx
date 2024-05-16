@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import s from "./Home.module.css";
-import Button from "../common/button/Button";
 
-function Home() {
-  let navigate = useNavigate();
+import Button from "../common/button/Button";
+import s from "./Home.module.css";
+
+const Home = () => {
+  const navigate = useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -16,9 +17,12 @@ function Home() {
         <Button variant="outline" onClick={() => navigate("/login")}>
           Go to log in
         </Button>
+        <Button variant="outline" onClick={() => navigate("/signup")}>
+          Go to sign up
+        </Button>
       </div>
     </div>
   );
-}
+};
 
 export default Home;

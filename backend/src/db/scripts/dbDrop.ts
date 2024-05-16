@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { adminClient } from "..";
+import { adminClient } from "../config/dbConfig";
 import fs from "node:fs";
 import path from "node:path";
 

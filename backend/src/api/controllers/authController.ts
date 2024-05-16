@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { UserSchema } from "../../models/User";
+import { UserSchema } from "../../db/config/User";
 import {
   createUser,
   validateUserCredentials,

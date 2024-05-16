@@ -1,18 +1,15 @@
+import { useRef } from "react";
 import s from "./ResultsDisplay.module.css";
+import useUpload from "../../hooks/useUpload";
 
-function ResultsDisplay({ data, onRetry, onNewFile }) {
-  if (!data) {
-    return <p>Loading...</p>;
-  }
+function ResultsDisplay({ data, onRetry }) {
+  const { handleFileChange } = useUpload();
+  const fileInputRef = useRef();
 
   const { success, errors } = data;
 
   const handleRetry = (index, field, newValue) => {
     onRetry(index, field, newValue);
-  };
-
-  const handleNewFile = () => {
-    onNewFile();
   };
 
   return (
@@ -55,7 +52,18 @@ function ResultsDisplay({ data, onRetry, onNewFile }) {
         </div>
       )}
 
-      <button onClick={handleNewFile} className={s.newFileButton}>
+      <input
+        type="file"
+        ref={fileInputRef}
+        className={s.inputFile}
+        onChange={handleFileChange}
+        accept=".csv"
+        style={{ display: "none" }}
+      />
+      <button
+        onClick={() => fileInputRef.current.click()}
+        className={s.newFileButton}
+      >
         Nuevo Archivo
       </button>
     </div>

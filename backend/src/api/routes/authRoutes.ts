@@ -5,7 +5,7 @@ import {
   createUser,
   validateUserCredentials,
 } from "../../services/auth.service";
-import { UserSchema } from "../../models/User";
+import { UserSchema } from "../../db/config/User";
 
 const authRouter = Router();
 const jwtSecret = process.env["JWT_SECRET"] || "your-secret-key";
