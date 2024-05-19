@@ -1,51 +1,168 @@
-import { createContext, useState, useEffect } from "react";
+// // src/contexts/AuthContext.jsx
+
+// import { createContext, useContext, useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// export const AuthContext = createContext();
+
+// export const useAuth = () => useContext(AuthContext);
+
+// export const AuthProvider = ({ children }) => {
+//   const [currentUser, setCurrentUser] = useState(null);
+//   const [error, setError] = useState("");
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       setCurrentUser({ token });
+//     }
+//   }, []);
+
+//   const login = async (email, password) => {
+//     try {
+//       const response = await fetch("http://localhost:3000/auth/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }), // Cambiar username a email
+//       });
+//       const data = await response.json();
+//       if (response.ok) {
+//         setCurrentUser({ token: data.token });
+//         localStorage.setItem("token", data.token);
+//         navigate("/upload");
+//       } else {
+//         setError(data.message);
+//         throw new Error(data.message);
+//       }
+//     } catch (error) {
+//       setError(error.message);
+//       throw error;
+//     }
+//   };
+
+//   const logout = () => {
+//     setCurrentUser(null);
+//     localStorage.removeItem("token");
+//     navigate("/login");
+//   };
+
+//   return (
+//     <AuthContext.Provider value={{ currentUser, login, logout, error }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// import { createContext, useContext, useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// export const AuthContext = createContext();
+
+// export const useAuth = () => useContext(AuthContext);
+
+// export const AuthProvider = ({ children }) => {
+//   const [currentUser, setCurrentUser] = useState(null);
+//   const [error, setError] = useState("");
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       setCurrentUser({ token });
+//     }
+//   }, []);
+
+//   const login = async (email, password) => {
+//     try {
+//       const response = await fetch("http://localhost:3000/auth/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       });
+//       const data = await response.json();
+//       if (response.ok) {
+//         setCurrentUser({ token: data.token });
+//         localStorage.setItem("token", data.token);
+//         navigate("/upload");
+//       } else {
+//         setError(data.message);
+//         throw new Error(data.message);
+//       }
+//     } catch (error) {
+//       setError(error.message);
+//       throw error;
+//     }
+//   };
+
+//   const logout = () => {
+//     setCurrentUser(null);
+//     localStorage.removeItem("token");
+//     navigate("/login");
+//   };
+
+//   return (
+//     <AuthContext.Provider value={{ currentUser, login, logout, error }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// src/contexts/AuthContext.jsx
+
+import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Aquí podrías decodificar el token para obtener el usuario
-      // y establecer el usuario.
+      setCurrentUser({ token });
     }
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     try {
-      const response = await fetch("/api/login", {
+      console.log("Logging in...");
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-
+      const data = await response.json();
       if (response.ok) {
-        const { token } = await response.json();
-        localStorage.setItem("token", token);
-        // Aquí podrías decodificar el token para obtener el usuario
-        // y establecer el usuario.
+        console.log("Login successful:", data);
+        setCurrentUser({ token: data.token });
+        localStorage.setItem("token", data.token);
+        navigate("/upload");
       } else {
-        const { error } = await response.json();
-        setError(error);
+        setError(data.message);
+        throw new Error(data.message);
       }
-    } catch (err) {
-      setError(err.message || "Network error");
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(error.message);
+      throw error;
     }
   };
 
   const logout = () => {
+    setCurrentUser(null);
     localStorage.removeItem("token");
-    setUser(null);
+    navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, error, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, error }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};

@@ -7,19 +7,19 @@ import AppRoutes from "./AppRoutes";
 
 function App() {
   return (
-    <AuthProvider>
-      <SignupProvider>
-        <UploadDataProvider>
-          <Router>
+    <Router>
+      <AuthProvider>
+        <SignupProvider>
+          <UploadDataProvider>
             <div className={s.wrapper}>
               <main className={s.main}>
                 <AppRoutes />
               </main>
             </div>
-          </Router>
-        </UploadDataProvider>
-      </SignupProvider>
-    </AuthProvider>
+          </UploadDataProvider>
+        </SignupProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

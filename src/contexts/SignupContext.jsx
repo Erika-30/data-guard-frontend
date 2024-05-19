@@ -1,46 +1,67 @@
-// src/contexts/SignupContext.jsx
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useEffect } from "react";
+import SignupSuccessModal from "../components/common/modals/signupSuccessModal/SuccessModal";
 
-const SignupContext = createContext();
+export const SignupContext = createContext();
 
-export const useSignup = () => useContext(SignupContext);
-
-export const SignupProvider = ({ children }) => {
+export function SignupProvider({ children }) {
   const [signupData, setSignupData] = useState(null);
   const [signupError, setSignupError] = useState("");
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
-  const signup = async (username, password, email, firstname, lastname) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Aquí podrías decodificar el token para obtener el usuario
+      // y establecer el usuario.
+    }
+  }, []);
+
+  const signup = async (username, email, age, role, password) => {
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("http://localhost:3000/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
-          password,
-          email,
-          firstname,
-          lastname,
+          username: username,
+          email: email,
+          age: age,
+          role: role,
+          password: password,
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setSignupData(data);
-        setSignupError("");
-      } else {
-        const error = await response.json();
-        setSignupError(error.message);
+      if (!response.ok) {
+        throw new Error("Signup failed");
       }
-    } catch (err) {
-      setSignupError(err.message || "Network error");
+
+      const data = await response.json();
+      setSignupData(data);
+      setSignupSuccess(true);
+    } catch (error) {
+      console.error("Error:", error);
+      setSignupError(error.message);
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    setSignupData(null);
+    setSignupSuccess(false);
+  };
+
+  const resetSignupState = () => {
+    setSignupData(null);
+    setSignupSuccess(false);
+  };
+
   return (
-    <SignupContext.Provider value={{ signupData, signupError, signup }}>
-      {children}
+    <SignupContext.Provider
+      value={{ signupData, signupError, signup, logout, resetSignupState }}
+    >
+      {!signupSuccess && children}
+      {signupData && <SignupSuccessModal />}
     </SignupContext.Provider>
   );
-};
+}
