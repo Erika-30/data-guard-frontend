@@ -57,7 +57,7 @@ function ResultsDisplay({ data, handleFileChange, handleNewFile }) {
   };
 
   const handleRetry = async (index, formData) => {
-    const { validate } = useSignup(); // Importar validate del hook useSignup
+    const { validate } = useSignup();
     const isValid = validate(formData);
 
     if (!isValid) {
@@ -68,13 +68,16 @@ function ResultsDisplay({ data, handleFileChange, handleNewFile }) {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://data-guard-1pqh.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Retry failed");

@@ -20,11 +20,14 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       console.log("Logging in...");
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://data-guard-1pqh.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful:", data);

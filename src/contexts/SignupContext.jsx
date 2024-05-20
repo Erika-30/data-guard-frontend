@@ -53,7 +53,7 @@
 //     if (!validate(formData)) return;
 
 //     try {
-//       const response = await fetch("http://localhost:3000/auth/signup", {
+//       const response = await fetch("https://data-guard-1pqh.onrender.com/auth/signup", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify(formData),
@@ -103,19 +103,22 @@ export function SignupProvider({ children }) {
 
   const signup = async (username, email, age, role, password) => {
     try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          age,
-          role,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "https://data-guard-1pqh.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            age,
+            role,
+            password,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Signup failed");
