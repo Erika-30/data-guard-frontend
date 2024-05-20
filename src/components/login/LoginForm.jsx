@@ -118,10 +118,8 @@ const LoginForm = () => {
     event.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto del formulario
     try {
       await login(email, password);
-      console.log("sssssssss");
       setLocalError("sssssssss");
     } catch (err) {
-      console.log(err.toString());
       setLocalError(err.toString());
     }
   };
