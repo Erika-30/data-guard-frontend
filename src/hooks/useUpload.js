@@ -181,9 +181,9 @@ const useUpload = () => {
       if (response.ok) {
         console.log("File uploaded successfully:", data);
         setSuccessMsg("File uploaded successfully.");
-        handleUpload(data.data); // Handle the uploaded data
+        handleUpload(data.data);
         setFile(null);
-        navigate("/result"); // Redirige a la ruta correcta
+        navigate("/result");
       } else {
         throw new Error(data.message || "Failed to upload file");
       }

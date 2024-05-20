@@ -11,7 +11,7 @@ const ResultsWithContext = () => {
       data={data}
       onRetry={handleRetry}
       handleFileChange={handleFileChange}
-      handleNewFile={handleNewFile} // Pasar handleNewFile como prop
+      handleNewFile={handleNewFile}
     />
   );
 };

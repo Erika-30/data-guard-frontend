@@ -1,142 +1,68 @@
-// import { useRef } from "react";
-// import s from "./ResultsDisplay.module.css";
+import { useNavigate } from "react-router-dom";
 
-// function ResultsDisplay({ data, onRetry }) {
-//   const { success = [], errors = [] } = data || {};
-//   const fileInputRef = useRef(); // Definir la referencia aquí
-
-//   const handleRetry = (index, field, newValue) => {
-//     onRetry(index, field, newValue);
-//   };
-
-//   return (
-//     <div className={s.container}>
-//       <div className={s.header}>
-//         <h1>Sistema de Carga de Datos</h1>
-//       </div>
-//       <div className={s.summary}>
-//         <p>
-//           <span className={s.successCount}>{success.length}</span> registros
-//           subidos correctamente.
-//         </p>
-//         {errors.length > 0 && (
-//           <p>
-//             <span className={s.errorCount}>{errors.length}</span> registros
-//             presentaron errores.
-//           </p>
-//         )}
-//       </div>
-
-//       {errors.length > 0 && (
-//         <div className={s.errorDetails}>
-//           <h2>Errores Encontrados</h2>
-//           {errors.map((error, index) => (
-//             <div key={index} className={s.errorItem}>
-//               <strong>Fila {error.row}:</strong>
-//               {Object.entries(error.details).map(([field, message], idx) => (
-//                 <div key={idx} className={s.errorField}>
-//                   <label>
-//                     {field}: {message}
-//                   </label>
-//                   <input
-//                     defaultValue={error[field]}
-//                     onChange={(e) => handleRetry(index, field, e.target.value)}
-//                   />
-//                 </div>
-//               ))}
-//             </div>
-//           ))}
-//         </div>
-//       )}
-
-//       <input
-//         type="file"
-//         ref={fileInputRef}
-//         className={s.inputFile}
-//         onChange={handleFileChange}
-//         accept=".csv"
-//         style={{ display: "none" }}
-//       />
-//       <button
-//         onClick={() => fileInputRef.current.click()}
-//         className={s.newFileButton}
-//       >
-//         Nuevo Archivo
-//       </button>
-//     </div>
-//   );
-// }
-
-// export default ResultsDisplay;
-
-import { useRef } from "react";
 import s from "./ResultsDisplay.module.css";
 
-function ResultsDisplay({ data, onRetry, handleFileChange, handleNewFile }) {
+function ResultsDisplay({ data, onRetry }) {
   const { success = [], errors = [] } = data || {};
-  const fileInputRef = useRef();
-
-  const handleRetry = (index, field, newValue) => {
-    onRetry(index, field, newValue);
-  };
+  const navigate = useNavigate();
 
   return (
     <div className={s.container}>
       <div className={s.header}>
         <h1>Sistema de Carga de Datos</h1>
+        <button onClick={() => navigate("/upload")} className={s.newFileButton}>
+          Nuevo Archivo
+        </button>
       </div>
       <div className={s.summary}>
-        <p>
-          <span className={s.successCount}>{success.length}</span> registros
-          subidos correctamente.
+        <div className={s.successBox}>
+          <span>✔ {success.length} records uploaded successfully</span>
+        </div>
+        <p className={s.errorText}>
+          The {errors.length} records listed below encountered errors. Please
+          rectify these issues and retry.
         </p>
-        {errors.length > 0 && (
-          <p>
-            <span className={s.errorCount}>{errors.length}</span> registros
-            presentaron errores.
-          </p>
-        )}
       </div>
 
       {errors.length > 0 && (
         <div className={s.errorDetails}>
           <h2>Errores Encontrados</h2>
-          {errors.map((error, index) => (
-            <div key={index} className={s.errorItem}>
-              <strong>Fila {error.row}:</strong>
-              {error.details.map(({ path, message }, idx) => (
-                <div key={idx} className={s.errorField}>
-                  <label>
-                    {path}: {message}
-                  </label>
-                  <input
-                    defaultValue={error[path]}
-                    onChange={(e) => handleRetry(index, path, e.target.value)}
-                  />
-                </div>
-              ))}
+          <div className={s.table}>
+            <div className={s.row}>
+              <div className={s.cell}>Row</div>
+              <div className={s.cell}>Username</div>
+              <div className={s.cell}>Email</div>
+              <div className={s.cell}>Age</div>
             </div>
-          ))}
+            {errors.map((error, index) => (
+              <div key={index} className={s.row}>
+                <div className={s.cell}>{error.row}</div>
+                {["username", "email", "age"].map((field) => (
+                  <div key={field} className={s.cell}>
+                    <input
+                      className={
+                        error.details.find((err) => err.path === field)
+                          ? s.errorInput
+                          : ""
+                      }
+                      defaultValue={error[field]}
+                      onChange={(e) => onRetry(index, field, e.target.value)}
+                    />
+                    {error.details.find((err) => err.path === field) && (
+                      <span className={s.errorMessage}>
+                        {
+                          error.details.find((err) => err.path === field)
+                            .message
+                        }
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       )}
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        className={s.inputFile}
-        onChange={handleFileChange}
-        accept=".csv"
-        style={{ display: "none" }}
-      />
-      <button
-        onClick={() => {
-          handleNewFile();
-          fileInputRef.current.click();
-        }}
-        className={s.newFileButton}
-      >
-        Nuevo Archivo
-      </button>
     </div>
   );
 }
