@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -27,13 +28,23 @@ const UserSchema = z.object({
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });
 
-const useSignup = (initialValues = {}) => {
-  const [formData, setFormData] = useState(initialValues);
+const useSignup = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [validationErrors, setValidationErrors] = useState({});
 
-  const validate = (data) => {
-    const result = UserSchema.safeParse(data);
+  const validate = () => {
+    const result = UserSchema.safeParse({
+      username,
+      email,
+      age,
+      role,
+      password,
+    });
     if (!result.success) {
       const errorObj = {};
       result.error.errors.forEach((error) => {
@@ -45,25 +56,43 @@ const useSignup = (initialValues = {}) => {
     setErrors({});
     return true;
   };
-  const handleValidationErrors = (index, formData, fieldErrors) => {
-    setValidationErrors((prevErrors) =>
-      prevErrors.map((error, i) =>
-        i === index ? { ...error, details: fieldErrors } : error
-      )
-    );
-  };
 
-  const updateField = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleSignup = async (event) => {
+    event.preventDefault();
+    if (!validate()) return;
+    try {
+      const response = await fetch(
+        "https://data-guard-1pqh.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, age, role, password }),
+        }
+      );
+      if (response.ok) {
+        navigate("/login");
+      } else {
+        const data = await response.json();
+        setErrors({ general: data.message });
+      }
+    } catch (error) {
+      setErrors({ general: "Error during signup" });
+    }
   };
 
   return {
-    formData,
+    username,
+    setUsername,
+    email,
+    setEmail,
+    age,
+    setAge,
+    role,
+    setRole,
+    password,
+    setPassword,
+    handleSignup,
     errors,
-    updateField,
-    validate,
-    handleValidationErrors,
-    validationErrors,
   };
 };
 

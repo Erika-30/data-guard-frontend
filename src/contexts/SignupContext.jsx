@@ -121,7 +121,6 @@ export function SignupProvider({ children }) {
       );
 
       if (!response.ok) {
-        throw new Error("Signup failed");
       }
 
       const data = await response.json();
