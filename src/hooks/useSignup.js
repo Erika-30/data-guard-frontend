@@ -1,36 +1,69 @@
 import { useState } from "react";
+import { z } from "zod";
 
-const useSignup = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [role, setRole] = useState("user");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+const UserSchema = z.object({
+  username: z
+    .string()
+    .min(1, "El nombre es requerido")
+    .max(30, "El nombre no puede exceder los 30 caracteres")
+    .regex(/^[a-zA-Z ]*$/, "El nombre solo puede contener letras y espacios"),
+  email: z
+    .string()
+    .email("Debe ser un email válido")
+    .max(50, "El email no puede exceder los 50 caracteres"),
+  age: z
+    .string()
+    .refine((value) => /^\d+$/.test(value), {
+      message: "La edad debe ser un número positivo",
+    })
+    .optional()
+    .nullable(),
+  role: z
+    .string()
+    .refine((value) => /^user$|^admin$/.test(value), {
+      message: "Debe ser 'user' o 'admin'",
+    })
+    .default("user"),
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+});
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+const useSignup = (initialValues = {}) => {
+  const [formData, setFormData] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
 
-    // Aquí puedes agregar la lógica para manejar el envío del formulario.
-    // Por ejemplo, podrías validar los datos del formulario, enviar una solicitud HTTP a un servidor, etc.
+  const validate = (data) => {
+    const result = UserSchema.safeParse(data);
+    if (!result.success) {
+      const errorObj = {};
+      result.error.errors.forEach((error) => {
+        errorObj[error.path[0]] = error.message;
+      });
+      setErrors(errorObj);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+  const handleValidationErrors = (index, formData, fieldErrors) => {
+    setValidationErrors((prevErrors) =>
+      prevErrors.map((error, i) =>
+        i === index ? { ...error, details: fieldErrors } : error
+      )
+    );
+  };
 
-    // Si ocurre un error, puedes usar setError para mostrar un mensaje de error en el formulario.
+  const updateField = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return {
-    name,
-    setName,
-    email,
-    setEmail,
-    age,
-    setAge,
-    role,
-    setRole,
-    password,
-    setPassword,
-    error,
-    setError,
-    handleSubmit,
+    formData,
+    errors,
+    updateField,
+    validate,
+    handleValidationErrors,
+    validationErrors,
   };
 };
 

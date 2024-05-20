@@ -36,3 +36,5 @@ export const UploadDataProvider = ({ children }) => {
     </UploadDataContext.Provider>
   );
 };
+
+export default UploadDataProvider;

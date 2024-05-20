@@ -1,108 +1,104 @@
-/* .container {
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .summary {
-  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.successCount,
-.errorCount {
-  font-weight: bold;
+.successBox {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+
+.errorText {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 10px 20px;
+  text-align: center;
 }
 
 .errorDetails {
   width: 100%;
-  margin-top: 20px;
+  text-align: center;
 }
 
-.errorItem {
-  margin-bottom: 10px;
+.table {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.headerRow {
+  font-weight: bold;
+}
+
+.row {
+  display: contents;
+}
+
+.cell {
   padding: 10px;
-  background-color: #f8f8f8;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
-.errorField {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 5px;
+.errorInput {
+  border-color: #ff0000;
+}
+
+.errorMessage {
+  color: #ff0000;
+  font-size: 12px;
+}
+
+.inputFile {
+  display: none;
 }
 
 .newFileButton {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 .newFileButton:hover {
-  background-color: #45a049;
-} */
-
-/* src/components/resultsDisplay/ResultsDisplay.module.css */
-
-/* src/components/resultsDisplay/ResultsDisplay.module.css */
-
-.container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  background-color: #0056b3;
 }
 
-.header {
-  text-align: center;
-}
-
-.summary {
-  margin-top: 20px;
-  padding: 10px;
+.retryButton {
+  background-color: #ffcc00;
+  color: black;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.successCount {
-  color: green;
-  font-weight: bold;
-}
-
-.errorCount {
-  color: red;
-  font-weight: bold;
-}
-
-.errorDetails {
-  margin-top: 20px;
-}
-
-.errorItem {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid red;
-  border-radius: 5px;
-  background-color: #ffe6e6;
-}
-
-.errorField {
-  margin-bottom: 5px;
-}
-
-.newFileButton {
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #ff9900;
 }
