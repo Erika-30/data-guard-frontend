@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -28,24 +27,13 @@ const UserSchema = z.object({
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });
 
-const useSignup = () => {
-  const navigate = useNavigate();
-
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [role, setRole] = useState("");
-  const [password, setPassword] = useState("");
+const useSignup = (initialValues = {}) => {
+  const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
 
-  const validate = () => {
-    const result = UserSchema.safeParse({
-      username,
-      email,
-      age,
-      role,
-      password,
-    });
+  const validate = (data) => {
+    const result = UserSchema.safeParse(data);
     if (!result.success) {
       const errorObj = {};
       result.error.errors.forEach((error) => {
@@ -57,42 +45,25 @@ const useSignup = () => {
     setErrors({});
     return true;
   };
+  const handleValidationErrors = (index, formData, fieldErrors) => {
+    setValidationErrors((prevErrors) =>
+      prevErrors.map((error, i) =>
+        i === index ? { ...error, details: fieldErrors } : error
+      )
+    );
+  };
 
-  const handleSignup = async (event) => {
-    event.preventDefault();
-    if (!validate()) return;
-
-    try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, age, role, password }),
-      });
-
-      if (response.ok) {
-        navigate("/login");
-      } else {
-        const data = await response.json();
-        setErrors({ general: data.message });
-      }
-    } catch (error) {
-      setErrors({ general: "Error during signup" });
-    }
+  const updateField = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return {
-    username,
-    setUsername,
-    email,
-    setEmail,
-    age,
-    setAge,
-    role,
-    setRole,
-    password,
-    setPassword,
-    handleSignup,
+    formData,
     errors,
+    updateField,
+    validate,
+    handleValidationErrors,
+    validationErrors,
   };
 };
 

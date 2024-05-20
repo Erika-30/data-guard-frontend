@@ -45,9 +45,13 @@
 
 .table {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   margin-bottom: 20px;
+}
+
+.headerRow {
+  font-weight: bold;
 }
 
 .row {
@@ -84,4 +88,17 @@
 
 .newFileButton:hover {
   background-color: #0056b3;
+}
+
+.retryButton {
+  background-color: #ffcc00;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #ff9900;
 }

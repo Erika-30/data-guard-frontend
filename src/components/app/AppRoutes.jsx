@@ -97,7 +97,7 @@ const AppRoutes = () => (
       }
     />
     <Route
-      path="/result" // Asegúrate de que la ruta es /result
+      path="/result"
       element={
         <PrivateRoute>
           <ResultsWithContext />
