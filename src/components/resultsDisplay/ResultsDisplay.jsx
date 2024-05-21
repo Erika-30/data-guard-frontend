@@ -1,70 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import s from "./ResultsDisplay.module.css";
-import useSignup from "../../hooks/useSignup";
+import useRetry from "../../hooks/useRetry";
+import ErrorRow from "./errorRow";
 
-function ErrorRow({ error, handleRetry, index }) {
-  const [formData, setFormData] = useState(error);
-  const [fieldErrors, setFieldErrors] = useState({});
-
-  const validate = (data) => {
-    const errors = {};
-    if (!data.username) errors.username = "Username is required";
-    if (!data.email) errors.email = "Email is required";
-    if (!data.age) errors.age = "Age is required";
-    return errors;
-  };
-
-  const updateField = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
-  };
-
-  const handleRetryClick = async () => {
-    const errors = validate(formData);
-    if (Object.keys(errors).length === 0) {
-      await handleRetry(index, formData);
-    } else {
-      setFieldErrors(errors);
-    }
-  };
-
-  return (
-    <div key={index} className={s.row}>
-      <div className={s.cell}>{error?.row || index + 1}</div>
-      {["username", "email", "age"].map((field) => (
-        <div key={field} className={s.cell}>
-          <input
-            className={fieldErrors[field] ? s.errorInput : ""}
-            value={formData[field] || ""}
-            onChange={(e) => updateField(field, e.target.value)}
-          />
-          {fieldErrors[field] && (
-            <span className={s.errorMessage}>{fieldErrors[field]}</span>
-          )}
-        </div>
-      ))}
-      <div className={s.cell}>
-        <button className={s.retryButton} onClick={handleRetryClick}>
-          Retry
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function ResultsDisplay({ data, onRetry }) {
+function ResultsDisplay({ data }) {
   const [errors, setErrors] = useState(data.errors || []);
+  const { successCount } = useRetry;
 
-  const handleRetry = async (index, formData) => {
-    const updatedErrors = [...errors];
-    try {
-      await onRetry(index, formData);
-      updatedErrors.splice(index, 1);
-      setErrors(updatedErrors);
-    } catch (e) {
-      updatedErrors[index] = { ...updatedErrors[index], ...formData };
-      setErrors(updatedErrors);
-    }
+  const handleRetry = (index) => {
+    setErrors((prevErrors) => prevErrors.filter((_, i) => i !== index));
   };
 
   return (
@@ -80,14 +24,13 @@ function ResultsDisplay({ data, onRetry }) {
       </div>
       <div className={s.summary}>
         <div className={s.successBox}>
-          <span>✔ {data.success.length} records uploaded successfully</span>
+          <span>✔ {successCount} records uploaded successfully</span>
         </div>
         <p className={s.errorText}>
           The {errors.length} records listed below encountered errors. Please
           rectify these issues and retry.
         </p>
       </div>
-
       {errors.length > 0 && (
         <div className={s.errorDetails}>
           <h2>Errores Encontrados</h2>

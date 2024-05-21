@@ -28,18 +28,28 @@
 //   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 // });
 
-// const useSignup = (initialValues = {}) => {
-//   const [formData, setFormData] = useState(initialValues);
-//   const [errors, setErrors] = useState({});
+// const useSignup = () => {
 //   const navigate = useNavigate();
+//   const [username, setUsername] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [age, setAge] = useState("");
+//   const [role, setRole] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [errors, setErrors] = useState({});
 
-//   const validate = (data) => {
-//     const result = UserSchema.safeParse(data);
+//   const validate = () => {
+//     const result = UserSchema.safeParse({
+//       username,
+//       email,
+//       age,
+//       role,
+//       password,
+//     });
 //     if (!result.success) {
-//       const errorObj = result.error.errors.reduce((acc, error) => {
-//         acc[error.path[0]] = error.message;
-//         return acc;
-//       }, {});
+//       const errorObj = {};
+//       result.error.errors.forEach((error) => {
+//         errorObj[error.path[0]] = error.message;
+//       });
 //       setErrors(errorObj);
 //       return false;
 //     }
@@ -48,19 +58,17 @@
 //   };
 
 //   const handleSignup = async (event) => {
-//     if (event) event.preventDefault();
-//     if (!validate(formData)) return;
-
+//     event.preventDefault();
+//     if (!validate()) return;
 //     try {
 //       const response = await fetch(
 //         "https://data-guard-1pqh.onrender.com/auth/signup",
 //         {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify(formData),
+//           body: JSON.stringify({ username, email, age, role, password }),
 //         }
 //       );
-
 //       if (response.ok) {
 //         navigate("/login");
 //       } else {
@@ -72,16 +80,19 @@
 //     }
 //   };
 
-//   const updateField = (field, value) => {
-//     setFormData((prev) => ({ ...prev, [field]: value }));
-//   };
-
 //   return {
-//     formData,
-//     errors,
-//     validate,
-//     updateField,
+//     username,
+//     setUsername,
+//     email,
+//     setEmail,
+//     age,
+//     setAge,
+//     role,
+//     setRole,
+//     password,
+//     setPassword,
 //     handleSignup,
+//     errors,
 //   };
 // };
 
@@ -126,14 +137,8 @@ const useSignup = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const validate = () => {
-    const result = UserSchema.safeParse({
-      username,
-      email,
-      age,
-      role,
-      password,
-    });
+  const validate = (data) => {
+    const result = UserSchema.safeParse(data);
     if (!result.success) {
       const errorObj = {};
       result.error.errors.forEach((error) => {
@@ -146,27 +151,32 @@ const useSignup = () => {
     return true;
   };
 
-  const handleSignup = async (event) => {
-    event.preventDefault();
-    if (!validate()) return;
+  const registerUser = async (data) => {
     try {
       const response = await fetch(
         "https://data-guard-1pqh.onrender.com/auth/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email, age, role, password }),
+          body: JSON.stringify(data),
         }
       );
       if (response.ok) {
         navigate("/login");
       } else {
-        const data = await response.json();
-        setErrors({ general: data.message });
+        const responseData = await response.json();
+        setErrors({ general: responseData.message });
       }
     } catch (error) {
       setErrors({ general: "Error during signup" });
     }
+  };
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+    const data = { username, email, age, role, password };
+    if (!validate(data)) return;
+    await registerUser(data);
   };
 
   return {
@@ -181,6 +191,8 @@ const useSignup = () => {
     password,
     setPassword,
     handleSignup,
+    registerUser,
+    validate,
     errors,
   };
 };
