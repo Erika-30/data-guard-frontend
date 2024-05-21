@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import s from "./ResultsDisplay.module.css";
 import useSignup from "../../hooks/useSignup";
 
-function ErrorRow({ error, handleRetry, index, handleValidationErrors }) {
+function ErrorRow({ error, handleRetry, index }) {
   const {
     formData,
     errors: fieldErrors,
@@ -11,17 +11,14 @@ function ErrorRow({ error, handleRetry, index, handleValidationErrors }) {
   } = useSignup(error);
 
   const handleRetryClick = async () => {
-    const isValid = validate(formData);
-    if (isValid) {
+    if (validate(formData)) {
       await handleRetry(index, formData);
-    } else {
-      handleValidationErrors(index, formData, fieldErrors);
     }
   };
 
   return (
     <div key={index} className={s.row}>
-      <div className={s.cell}>{error.row}</div>
+      <div className={s.cell}>{index + 1}</div>
       {["username", "email", "age"].map((field) => (
         <div key={field} className={s.cell}>
           <input
@@ -43,74 +40,15 @@ function ErrorRow({ error, handleRetry, index, handleValidationErrors }) {
   );
 }
 
-function ResultsDisplay({ data, handleFileChange, handleNewFile }) {
-  const { success = [], errors: initialErrors = [] } = data || {};
-  const [errors, setErrors] = useState(initialErrors);
-  const fileInputRef = useRef();
-
-  const handleValidationErrors = (index, formData, fieldErrors) => {
-    setErrors((prevErrors) =>
-      prevErrors.map((error, i) =>
-        i === index ? { ...error, details: fieldErrors } : error
-      )
-    );
-  };
-
-  const handleRetry = async (index, formData) => {
-    const { validate } = useSignup();
-    const isValid = validate(formData);
-
-    if (!isValid) {
-      setErrors((prevErrors) =>
-        prevErrors.map((error, i) => (i === index ? formData : error))
-      );
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://data-guard-1pqh.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Retry failed");
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        setErrors(errors.filter((_, i) => i !== index));
-      } else {
-        setErrors(errors.map((error, i) => (i === index ? data.error : error)));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setErrors((prevErrors) =>
-        prevErrors.map((error, i) =>
-          i === index ? { ...error, retryError: error.message } : error
-        )
-      );
-    }
-  };
+function ResultsDisplay({ data, handleRetry }) {
+  const { success = [], errors = [] } = data || {};
+  const navigate = useNavigate();
 
   return (
     <div className={s.container}>
       <div className={s.header}>
         <h1>Sistema de Carga de Datos</h1>
-        <button
-          onClick={() => {
-            handleNewFile();
-            fileInputRef.current.click();
-          }}
-          className={s.newFileButton}
-        >
+        <button onClick={() => navigate("/upload")} className={s.newFileButton}>
           Nuevo Archivo
         </button>
       </div>
@@ -146,15 +84,6 @@ function ResultsDisplay({ data, handleFileChange, handleNewFile }) {
           </div>
         </div>
       )}
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        className={s.inputFile}
-        onChange={handleFileChange}
-        accept=".csv"
-        style={{ display: "none" }}
-      />
     </div>
   );
 }

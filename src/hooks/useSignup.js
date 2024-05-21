@@ -28,28 +28,18 @@ const UserSchema = z.object({
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });
 
-const useSignup = () => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [role, setRole] = useState("");
-  const [password, setPassword] = useState("");
+const useSignup = (initialValues = {}) => {
+  const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
-  const validate = () => {
-    const result = UserSchema.safeParse({
-      username,
-      email,
-      age,
-      role,
-      password,
-    });
+  const validate = (data) => {
+    const result = UserSchema.safeParse(data);
     if (!result.success) {
-      const errorObj = {};
-      result.error.errors.forEach((error) => {
-        errorObj[error.path[0]] = error.message;
-      });
+      const errorObj = result.error.errors.reduce((acc, error) => {
+        acc[error.path[0]] = error.message;
+        return acc;
+      }, {});
       setErrors(errorObj);
       return false;
     }
@@ -58,17 +48,19 @@ const useSignup = () => {
   };
 
   const handleSignup = async (event) => {
-    event.preventDefault();
-    if (!validate()) return;
+    if (event) event.preventDefault();
+    if (!validate(formData)) return;
+
     try {
       const response = await fetch(
         "https://data-guard-1pqh.onrender.com/auth/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email, age, role, password }),
+          body: JSON.stringify(formData),
         }
       );
+
       if (response.ok) {
         navigate("/login");
       } else {
@@ -80,19 +72,16 @@ const useSignup = () => {
     }
   };
 
+  const updateField = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   return {
-    username,
-    setUsername,
-    email,
-    setEmail,
-    age,
-    setAge,
-    role,
-    setRole,
-    password,
-    setPassword,
-    handleSignup,
+    formData,
     errors,
+    validate,
+    updateField,
+    handleSignup,
   };
 };
 
