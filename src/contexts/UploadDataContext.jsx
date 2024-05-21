@@ -1,8 +1,6 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState } from "react";
 
-const UploadDataContext = createContext();
-
-export const useUploadData = () => useContext(UploadDataContext);
+export const UploadDataContext = createContext();
 
 export const UploadDataProvider = ({ children }) => {
   const [data, setData] = useState({ success: [], errors: [] });
@@ -11,17 +9,31 @@ export const UploadDataProvider = ({ children }) => {
     setData(uploadedData || { success: [], errors: [] });
   };
 
-  const handleRetry = (index, field, newValue) => {
-    const newErrors = data.errors.map((error, idx) => {
-      if (idx === index) {
-        return {
-          ...error,
-          [field]: newValue,
-        };
+  const handleRetry = async (index, newData) => {
+    try {
+      const response = await fetch(
+        "https://data-guard-1pqh.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newData),
+        }
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        setData((prevData) => {
+          const newErrors = [...prevData.errors];
+          newErrors.splice(index, 1);
+          const newSuccess = [...prevData.success, newData];
+          return { success: newSuccess, errors: newErrors };
+        });
+      } else {
+        throw new Error(result.message || "Retry failed");
       }
-      return error;
-    });
-    setData({ ...data, errors: newErrors });
+    } catch (error) {
+      console.error("Retry error:", error);
+    }
   };
 
   const handleNewFile = () => {

@@ -1,29 +1,41 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import s from "./ResultsDisplay.module.css";
 import useSignup from "../../hooks/useSignup";
 
 function ErrorRow({ error, handleRetry, index }) {
-  const {
-    formData,
-    errors: fieldErrors,
-    updateField,
-    validate,
-  } = useSignup(error);
+  const [formData, setFormData] = useState(error);
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  const validate = (data) => {
+    const errors = {};
+    if (!data.username) errors.username = "Username is required";
+    if (!data.email) errors.email = "Email is required";
+    if (!data.age) errors.age = "Age is required";
+    return errors;
+  };
+
+  const updateField = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
 
   const handleRetryClick = async () => {
-    if (validate(formData)) {
+    const errors = validate(formData);
+    if (Object.keys(errors).length === 0) {
       await handleRetry(index, formData);
+    } else {
+      setFieldErrors(errors);
     }
   };
 
   return (
     <div key={index} className={s.row}>
-      <div className={s.cell}>{index + 1}</div>
+      <div className={s.cell}>{error?.row || index + 1}</div>
       {["username", "email", "age"].map((field) => (
         <div key={field} className={s.cell}>
           <input
             className={fieldErrors[field] ? s.errorInput : ""}
-            defaultValue={formData[field]}
+            value={formData[field] || ""}
             onChange={(e) => updateField(field, e.target.value)}
           />
           {fieldErrors[field] && (
@@ -40,21 +52,35 @@ function ErrorRow({ error, handleRetry, index }) {
   );
 }
 
-function ResultsDisplay({ data, handleRetry }) {
-  const { success = [], errors = [] } = data || {};
-  const navigate = useNavigate();
+function ResultsDisplay({ data, onRetry }) {
+  const [errors, setErrors] = useState(data.errors || []);
+
+  const handleRetry = async (index, formData) => {
+    const updatedErrors = [...errors];
+    try {
+      await onRetry(index, formData);
+      updatedErrors.splice(index, 1);
+      setErrors(updatedErrors);
+    } catch (e) {
+      updatedErrors[index] = { ...updatedErrors[index], ...formData };
+      setErrors(updatedErrors);
+    }
+  };
 
   return (
     <div className={s.container}>
       <div className={s.header}>
         <h1>Sistema de Carga de Datos</h1>
-        <button onClick={() => navigate("/upload")} className={s.newFileButton}>
+        <button
+          onClick={() => window.location.reload()}
+          className={s.newFileButton}
+        >
           Nuevo Archivo
         </button>
       </div>
       <div className={s.summary}>
         <div className={s.successBox}>
-          <span>✔ {success.length} records uploaded successfully</span>
+          <span>✔ {data.success.length} records uploaded successfully</span>
         </div>
         <p className={s.errorText}>
           The {errors.length} records listed below encountered errors. Please
@@ -76,7 +102,7 @@ function ResultsDisplay({ data, handleRetry }) {
             {errors.map((error, index) => (
               <ErrorRow
                 key={index}
-                error={error}
+                error={error || {}}
                 handleRetry={handleRetry}
                 index={index}
               />
