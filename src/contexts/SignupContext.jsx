@@ -82,8 +82,7 @@ export function SignupProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Aquí podrías decodificar el token para obtener el usuario
-      // y establecer el usuario.
+      // obetencion del usuario
     }
   }, []);
 
@@ -107,6 +106,7 @@ export function SignupProvider({ children }) {
       );
 
       if (!response.ok) {
+        console.log(response); //
       }
 
       const data = await response.json();
