@@ -109,16 +109,16 @@ import Button from "../common/button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 
 const LoginForm = () => {
-  const { login, errors = {} } = useAuth(); // Asegúrate de que errors siempre sea un objeto
+  const { login, errors = {} } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto del formulario
+    event.preventDefault();
     try {
       await login(email, password);
-      setLocalError("sssssssss");
+      setLocalError("error");
     } catch (err) {
       setLocalError(err.toString());
     }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUploadData from "../hooks/useUploadData"; // Importa desde el archivo correcto
+import useUploadData from "../hooks/useUploadData";
 import { useAuth } from "../contexts/AuthContext";
 
 const useUpload = () => {
