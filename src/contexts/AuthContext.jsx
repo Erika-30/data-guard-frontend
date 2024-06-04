@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      console.log("Logging in...");
       const response = await fetch(
         "https://data-guard-1pqh.onrender.com/auth/login",
         {
@@ -30,7 +29,6 @@ export const AuthProvider = ({ children }) => {
       );
       const data = await response.json();
       if (response.ok) {
-        console.log("Login successful:", data);
         setCurrentUser({ token: data.token });
         localStorage.setItem("token", data.token);
         navigate("/upload");
@@ -39,7 +37,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message);
       }
     } catch (error) {
-      console.error("Login error:", error);
       setError(error.message);
       throw error;
     }

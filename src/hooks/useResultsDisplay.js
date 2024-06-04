@@ -1,5 +1,5 @@
 import { useUploadData } from "../contexts/UploadDataContext";
-import ResultsDisplay from "../components/resultsDisplay/ResultsDisplay";
+import ResultsDisplay from "../components/ResultsDisplay";
 
 const useResultsDisplay = () => {
   const { data, handleRetry, handleNewFile } = useUploadData();

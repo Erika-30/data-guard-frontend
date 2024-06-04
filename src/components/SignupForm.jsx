@@ -1,6 +1,6 @@
 import s from "./SignupForm.module.css";
-import Button from "../common/button/Button";
-import useSignup from "../../hooks/useSignup";
+import Button from "./Button";
+import useSignup from "../hooks/useSignup";
 
 const FormField = ({ type, placeholder, value, setValue, error }) => (
   <div className={s.formGroup}>

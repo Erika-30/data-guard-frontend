@@ -12,7 +12,7 @@ export const UploadDataProvider = ({ children }) => {
   const handleRetry = async (index, newData) => {
     try {
       const response = await fetch(
-        "https://data-guard-1pqh.onrender.com/auth/signup",
+        "https://data-guard-1pqh.onrender.com/user/retry",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -29,10 +29,11 @@ export const UploadDataProvider = ({ children }) => {
           return { success: newSuccess, errors: newErrors };
         });
       } else {
-        throw new Error(result.message || "Retry failed");
+        return result;
       }
     } catch (error) {
       console.error("Retry error:", error);
+      throw error;
     }
   };
 

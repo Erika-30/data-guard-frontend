@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
-import Button from "../common/button/Button";
+import Button from "./Button";
 import s from "./Home.module.css";
 
 const Home = () => {
@@ -9,7 +8,6 @@ const Home = () => {
   return (
     <div className={s.wrapper}>
       <h1 className={s.title}>
-        {" "}
         Data Upload and Validation System with Authentication
       </h1>
       <p className={s.name}>By Judith Huisa</p>
