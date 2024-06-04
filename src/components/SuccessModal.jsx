@@ -1,12 +1,12 @@
 import { useContext, useState, useEffect } from "react";
 import Modal from "react-modal";
-import { SignupContext } from "../../../../contexts/SignupContext";
+import { SignupContext } from "../contexts/SignupContext";
 import styles from "./SuccessModal.module.css";
 import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
-function SignupSuccessModal() {
+function SuccessModal() {
   const navigate = useNavigate();
   const { signupData, resetSignupState } = useContext(SignupContext);
   const [isOpen, setIsOpen] = useState(!!signupData);
@@ -41,4 +41,4 @@ function SignupSuccessModal() {
   );
 }
 
-export default SignupSuccessModal;
+export default SuccessModal;

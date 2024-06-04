@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import Modal from "react-modal";
-import { SignupContext } from "../../contexts/SignupContext";
+import { SignupContext } from "../contexts/SignupContext";
 
-Modal.setAppElement("#root"); // Esto es necesario para la accesibilidad
+Modal.setAppElement("#root");
 
-function SignupErrorModal() {
+function ErrorModal() {
   const { signupData } = useContext(SignupContext);
 
   return (
@@ -25,4 +25,4 @@ function SignupErrorModal() {
   );
 }
 
-export default SignupErrorModal;
+export default ErrorModal;

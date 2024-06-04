@@ -1,6 +1,6 @@
 import s from "./UploadForm.module.css";
-import Button from "../common/button/Button";
-import useUpload from "../../hooks/useUpload";
+import Button from "./Button";
+import useUpload from "../hooks/useUpload";
 
 function UploadForm() {
   const { uploading, error, successMsg, handleFileChange, handleSubmit } =

@@ -29,7 +29,6 @@ const useUpload = () => {
     formData.append("file", file);
 
     try {
-      console.log("Uploading file...");
       const response = await fetch(
         "https://data-guard-1pqh.onrender.com/user/upload",
         {
@@ -42,7 +41,6 @@ const useUpload = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        console.log("File uploaded successfully:", data);
         setSuccessMsg("File uploaded successfully.");
         handleUpload(data.data);
         setFile(null);
@@ -51,7 +49,6 @@ const useUpload = () => {
         throw new Error(data.message || "Failed to upload file");
       }
     } catch (err) {
-      console.error("Upload error:", err);
       setError(err.message);
     } finally {
       setUploading(false);

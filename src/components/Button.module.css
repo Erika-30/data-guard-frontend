@@ -6,7 +6,6 @@
   transition: all 0.3s ease;
 }
 
-/* Define estilos para el botón primario */
 .primary {
   background-color: #007bff;
   color: white;
@@ -17,7 +16,6 @@
   background-color: #0056b3;
 }
 
-/* Define estilos para el botón secundario (outline) */
 .outline {
   background-color: transparent;
   color: #007bff;
@@ -30,7 +28,6 @@
   color: white;
 }
 
-/* Define estilos para diferentes tamaños de botón */
 .md {
   font-size: 16px;
 }
